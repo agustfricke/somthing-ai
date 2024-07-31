@@ -2,14 +2,16 @@ import { gql } from "graphql-tag";
 
 export const typeDefs = gql`
   type Query {
-    hello: String
     publicImages(page: Int, limit: Int, searchParam: String): PaginatedImages
+    userImages(page: Int, limit: Int, searchParam: String): PaginatedImages
+    image(_id: ID!): Image
   }
 
   type Mutation {
     login(username: String!, password: String!): Token
     register(username: String!, password: String): User
     createImage(prompt: String!, isPublic: Boolean): Image
+    updateImage(_id: ID!, isPublic: Boolean): Image
   }
 
   type PaginatedImages {

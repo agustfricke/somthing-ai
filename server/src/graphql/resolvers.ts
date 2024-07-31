@@ -6,7 +6,6 @@ import jwt from "jsonwebtoken";
 
 export const resolvers = {
   Query: {
-    hello: () => "Hello world!",
     publicImages: async (_, { page = 1, limit = 10, searchParam = "" }) => {
       try {
         const skip = (page - 1) * limit;
@@ -14,6 +13,41 @@ export const resolvers = {
           ? { prompt: { $regex: searchParam, $options: "i" } }
           : {};
         const filter = { isPublic: true, ...searchFilter };
+
+        const images = await Image.find(filter).skip(skip).limit(limit);
+
+        const totalImages = await Image.countDocuments(filter);
+        const totalPages = Math.ceil(totalImages / limit);
+
+        return {
+          images,
+          pageInfo: {
+            currentPage: page,
+            totalPages,
+            hasNextPage: page < totalPages,
+            hasPreviousPage: page > 1,
+          },
+        };
+      } catch (error) {
+        console.log("errorwiwiwiwi", error)
+        throw new Error("Failed to fetch public images");
+      }
+    },
+		image: async (_, { _id }) => {
+			return await Image.findById(_id);
+		},
+    userImages: async (_, { page = 1, limit = 10, searchParam = "" }, context) => {
+      console.log(context)
+      const { user } = context;
+      if (!user) {
+        throw new Error("You must be logged in to create an image.");
+      }
+      try {
+        const skip = (page - 1) * limit;
+        const searchFilter = searchParam
+          ? { prompt: { $regex: searchParam, $options: "i" } }
+          : {};
+        const filter = { isPublic: true, ...searchFilter, userId: user._id };
 
         const images = await Image.find(filter).skip(skip).limit(limit);
 
@@ -45,7 +79,7 @@ export const resolvers = {
       if (!isMatch) {
         throw new Error("Incorrect password.");
       }
-      const token = jwt.sign({ _id: user._id }, "some-key");
+      const token = jwt.sign({ _id: user._id }, "some-key-key-key");
       return { token };
     },
     register: async (_, { username, password }) => {
@@ -89,6 +123,15 @@ export const resolvers = {
         userId: user._id,
         path,
       });
+      await image.save();
+      return image;
+    },
+    updateImage: async (_, { _id, isPublic }) => {
+      const image = await Image.findById(_id);
+      if (!image) {
+        throw new Error("Image not found.");
+      }
+      image.isPublic = isPublic;
       await image.save();
       return image;
     },

@@ -36,10 +36,13 @@ app.use('/graphql', cors(), express.json(), expressMiddleware(server, {
         }
         const token = authHeader.split(" ")[1];
         try {
-            const decodedToken = jwt.verify(token, "some-key");
+            const decodedToken = jwt.verify(token, "some-key-key-key");
+            console.log("todo ok");
             return { user: decodedToken };
         }
         catch (error) {
+            console.error('Token verification failed:', error.message);
+            console.log("no ok");
             return { user: null };
         }
     },
