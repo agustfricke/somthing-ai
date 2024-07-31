@@ -2,7 +2,6 @@ import {
   Home as H,
   Menu,
   LogOutIcon,
-  Package,
   Pickaxe,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -40,10 +39,6 @@ export default function Navbar() {
             >
               <Pickaxe className="h-4 w-4" />
               Generate image
-            </Link>
-            <Link to="/tutorial" className={getLinkClass("/tutorial")}>
-              <Package className="h-4 w-4" />
-              Tutorial
             </Link>
 
               <button

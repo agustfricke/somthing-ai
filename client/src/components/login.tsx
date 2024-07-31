@@ -24,7 +24,7 @@ export default function Login() {
 
   const [login, { loading }] = useMutation(LOGIN, {
     onCompleted: (response) => {
-      setToken(response.login.token);
+      setToken(response.login.token, response.login._id);
       toast.success("Login successful.");
       setUsername("");
       setPassword("");
@@ -70,7 +70,7 @@ export default function Login() {
                     onChange={(e) => setUsername(e.target.value)}
                     id="username"
                     type="text"
-                    placeholder="ai.zustack"
+                    placeholder="somthing.username.ai"
                     required
                   />
                 </div>

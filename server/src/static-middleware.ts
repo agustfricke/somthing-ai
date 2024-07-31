@@ -16,11 +16,12 @@ export async function authMiddleware(req, res, next) {
   }
 
   try {
-    const decodedToken = jwt.verify(token, 'some-key');
+    const decodedToken = jwt.verify(token, "some-key-key-key");
     const tokenUserID = decodedToken._id;
 
     const fileName = path.basename(req.url);
-    const image = await Image.findOne({ path: fileName });
+    const fileNameIs = `/private/${fileName}`;
+    const image = await Image.findOne({ path: fileNameIs });
 
     if (!image) {
       return res.status(404).json({ message: "Imagen no encontrada" });

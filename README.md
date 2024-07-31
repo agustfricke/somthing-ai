@@ -20,7 +20,8 @@ sudo docker run --name aidb -p 27017:27017 -d mongo
 - [x] login 
 - [x] discover 
 - [x] generate image
-- [ ] user images
-- [ ] update image public/private
-- [ ] solo image
+- [x] user images
+- [x] update image public/private
+- [x] get private images with jwt token
+- [x] solo image
 

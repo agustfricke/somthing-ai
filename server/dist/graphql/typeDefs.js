@@ -27,6 +27,7 @@ export const typeDefs = gql `
 
   type Token {
     token: String
+    _id: ID
   }
 
   type User {

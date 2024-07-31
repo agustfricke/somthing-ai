@@ -25,6 +25,12 @@ try {
 const app = express();
 const httpServer = http.createServer(app);
 
+app.use(cors({
+  origin: '*', // Permite solicitudes desde cualquier origen
+  methods: ['GET', 'POST'], // Permite métodos específicos
+  allowedHeaders: ['Content-Type', 'Authorization'] // Permite headers específicos
+}));
+
 app.use('/public', express.static(path.join('static/public')));
 app.use('/private', authMiddleware, express.static(path.join('static/private')));
 

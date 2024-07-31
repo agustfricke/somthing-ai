@@ -15,7 +15,7 @@ export default function Sidebar() {
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link to="/" className="flex items-center gap-2 font-semibold">
-            <span className="">ai.zustack</span>
+            <span className="">Something AI</span>
           </Link>
         </div>
         <div className="flex-1">
@@ -30,10 +30,6 @@ export default function Sidebar() {
             >
               <Pickaxe className="h-4 w-4" />
               Generate image
-            </Link>
-            <Link to="/tutorial" className={getLinkClass("/tutorial")}>
-              <Package className="h-4 w-4" />
-              Tutorial
             </Link>
 
               <button

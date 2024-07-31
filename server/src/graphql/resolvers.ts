@@ -47,7 +47,7 @@ export const resolvers = {
         const searchFilter = searchParam
           ? { prompt: { $regex: searchParam, $options: "i" } }
           : {};
-        const filter = { isPublic: true, ...searchFilter, userId: user._id };
+        const filter = { ...searchFilter, userId: user._id };
 
         const images = await Image.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit);
 
@@ -80,7 +80,7 @@ export const resolvers = {
         throw new Error("Incorrect password.");
       }
       const token = jwt.sign({ _id: user._id }, "some-key-key-key");
-      return { token };
+      return { token, _id: user._id };
     },
     register: async (_, { username, password }) => {
       const salt = await bcrypt.genSalt(10);
@@ -120,7 +120,7 @@ export const resolvers = {
         prompt,
         isPublic,
         userId: user._id,
-        path: "some-path",
+        path: "/private/2024-07-31_11-56-52_2342.png",
       });
       await image.save();
       return image;

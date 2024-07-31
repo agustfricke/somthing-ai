@@ -7,17 +7,19 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { InView } from "react-intersection-observer";
+import { Image } from "@/types";
+import ImageComponent from "@/components/image";
 
 export default function Discover() {
   const [searchInput, setSearchInput] = useState("");
   const [page, setPage] = useState(1);
-  const [allImages, setAllImages] = useState([]);
+  const [allImages, setAllImages] = useState<Image[]>([]);
   const [fullyLoaded, setFullyLoaded] = useState(false);
 
   const { loading, error, data, fetchMore, refetch } = useQuery(
     GET_PUBLIC_IMAGES,
     {
-      variables: { page: 1, limit: 10, searchParam: searchInput },
+      variables: { page: 1, limit: 30, searchParam: searchInput },
       notifyOnNetworkStatusChange: true,
     }
   );
@@ -77,17 +79,13 @@ export default function Discover() {
       </div>
       <ScrollArea className="h-full max-h-[calc(80vh-4rem)] w-full p-4">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
-          {allImages.map((image, index) => (
+          {allImages.map((image: Image) => (
             <Link
-              key={`${image._id}-${index}`}
+              key={`${image._id}`}
               to={`/image/${image._id}`}
               className="hover:cursor-pointer rounded-lg hover:bg-zinc-500/50 transition-colors duration-300 p-1"
             >
-              <img
-                className="rounded-lg w-full h-48 object-cover"
-                src={image.path}
-                alt={image.prompt}
-              />
+            <ImageComponent path={`${import.meta.env.VITE_BACKEND_URL}${image.path}`} /> 
               <p className="mt-2 text-sm text-zinc-300">{image.prompt}</p>
             </Link>
           ))}

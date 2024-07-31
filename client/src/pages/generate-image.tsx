@@ -8,11 +8,13 @@ import UserImages from "@/components/user-images";
 import { useMutation } from "@apollo/client";
 import { GENERATE_IMAGE } from "@/api/images";
 import { gql } from "@apollo/client";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function GenerateImage() {
   const { isAuth } = useAuthStore();
   const token: string = useAuthStore.getState().access;
   const [prompt, setPrompt] = useState("");
+  const [isPublic, setIsPublic] = useState(true);
 
   const [generateImage, { loading }] = useMutation(GENERATE_IMAGE, {
     context: {
@@ -20,8 +22,7 @@ export default function GenerateImage() {
         Authorization: `Bearer ${token}`,
       },
     },
-    onCompleted: (response) => {
-      console.log(response);
+    onCompleted: () => {
       toast.success("Image generated successfully.");
       setPrompt("");
     },
@@ -69,7 +70,7 @@ export default function GenerateImage() {
     generateImage({
       variables: {
         prompt,
-        isPublic: true,
+        isPublic,
       },
     });
   };
@@ -94,6 +95,24 @@ export default function GenerateImage() {
               placeholder="Describe your image"
               className="w-full appearance-none bg-muted/40 rounded-lg pr-8 shadow-none outline-none focus:outline-none ring-0 border-0 focus-visible:ring-offset-0 focus-visible:ring-0"
             />
+            <div className="items-top flex space-x-2 mt-4">
+              <Checkbox
+                checked={isPublic}
+                onCheckedChange={(checked: boolean) => setIsPublic(checked)}
+                id="isPublic"
+              />
+              <div className="grid gap-1.5 leading-none">
+                <label
+                  htmlFor="isPublic"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                {isPublic ? "Public image" : "Private image"}
+                </label>
+                <p className="text-sm text-muted-foreground">
+                  You can change this setting later
+                </p>
+              </div>
+            </div>
             {loading ? (
               <Loader className="animate-spin slower absolute right-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             ) : (
