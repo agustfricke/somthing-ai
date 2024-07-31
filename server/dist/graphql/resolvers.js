@@ -126,7 +126,6 @@ export const resolvers = {
                 throw new Error("Image not found.");
             }
             let newPath;
-            // const systemPath = `/home/agust/work/somthing-ai/server/static/`;
             const systemPath = process.env.SYSTEM_PATH;
             try {
                 if (image.path.includes("private")) {

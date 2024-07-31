@@ -10,6 +10,7 @@ import cors from 'cors';
 import http from 'http';
 import path from "path";
 import dotenv from 'dotenv';
+import { ApolloServerPluginLandingPageDisabled } from '@apollo/server/plugin/disabled';
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.use('/private', authMiddleware, express.static(path.join('static/private')))
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  plugins: [ApolloServerPluginLandingPageDisabled()],
 });
 
 await server.start();
