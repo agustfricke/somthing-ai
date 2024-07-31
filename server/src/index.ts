@@ -1,6 +1,6 @@
 import { startStandaloneServer } from "@apollo/server/standalone";
 import mongoose from "mongoose";
-import { typeDefs } from "./graphql/tyeDefs.js";
+import { typeDefs } from "./graphql/typeDefs.js";
 import { resolvers } from "./graphql/resolvers.js";
 import jwt from "jsonwebtoken";
 import { authMiddleware } from "./static-middleware.js";

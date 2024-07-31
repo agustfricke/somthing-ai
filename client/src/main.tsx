@@ -20,6 +20,15 @@ const client = new ApolloClient({
               };
             },
           },
+          userImages: {
+            keyArgs: [],
+            merge(existing = { images: [] }, incoming) {
+              return {
+                ...incoming,
+                images: [...existing.images, ...incoming.images],
+              };
+            },
+          },
         },
       },
     },

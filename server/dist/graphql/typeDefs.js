@@ -1,6 +1,5 @@
 import { gql } from "graphql-tag";
-
-export const typeDefs = gql`
+export const typeDefs = gql `
   type Query {
     publicImages(page: Int, limit: Int, searchParam: String): PaginatedImages
     userImages(page: Int, limit: Int, searchParam: String): PaginatedImages
@@ -10,7 +9,7 @@ export const typeDefs = gql`
   type Mutation {
     login(username: String!, password: String!): Token
     register(username: String!, password: String): User
-    createImage(prompt: String!, isPublic: Boolean): Image
+    generateImage(prompt: String!, isPublic: Boolean): Image
     updateImage(_id: ID!, isPublic: Boolean): Image
   }
 
@@ -50,6 +49,5 @@ export const typeDefs = gql`
   }
 
 `;
-
 /*
   */

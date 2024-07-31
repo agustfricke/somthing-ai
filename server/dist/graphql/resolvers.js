@@ -1,6 +1,5 @@
 import Image from "../models/images.js";
 import User from "../models/users.js";
-import axios from "axios";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 export const resolvers = {
@@ -12,7 +11,7 @@ export const resolvers = {
                     ? { prompt: { $regex: searchParam, $options: "i" } }
                     : {};
                 const filter = { isPublic: true, ...searchFilter };
-                const images = await Image.find(filter).skip(skip).limit(limit);
+                const images = await Image.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit);
                 const totalImages = await Image.countDocuments(filter);
                 const totalPages = Math.ceil(totalImages / limit);
                 return {
@@ -45,7 +44,7 @@ export const resolvers = {
                     ? { prompt: { $regex: searchParam, $options: "i" } }
                     : {};
                 const filter = { isPublic: true, ...searchFilter, userId: user._id };
-                const images = await Image.find(filter).skip(skip).limit(limit);
+                const images = await Image.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit);
                 const totalImages = await Image.countDocuments(filter);
                 const totalPages = Math.ceil(totalImages / limit);
                 return {
@@ -91,29 +90,28 @@ export const resolvers = {
             await user.save();
             return user;
         },
-        createImage: async (_, { prompt, isPublic }, context) => {
+        generateImage: async (_, { prompt, isPublic }, context) => {
             const { user } = context;
             if (!user) {
                 throw new Error("You must be logged in to create an image.");
             }
-            var path;
+            /*
             try {
-                const respuesta = await axios.post("http://localhost:42069/entry", {
-                    prompt,
-                    is_public: isPublic,
-                });
-                path = respuesta.data;
+              const respuesta = await axios.post("http://localhost:42069/entry", {
+                prompt,
+                is_public: isPublic,
+              });
+              path = respuesta.data;
+            } catch (error) {
+              console.log("el error", error);
+              throw new Error("Error generating image.");
             }
-            catch (error) {
-                console.log("el error", error);
-                throw new Error("Error generating image.");
-            }
-            console.log("the path", path);
+            */
             const image = new Image({
                 prompt,
                 isPublic,
                 userId: user._id,
-                path,
+                path: "some-path",
             });
             await image.save();
             return image;

@@ -14,7 +14,7 @@ export const resolvers = {
           : {};
         const filter = { isPublic: true, ...searchFilter };
 
-        const images = await Image.find(filter).skip(skip).limit(limit);
+        const images = await Image.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit);
 
         const totalImages = await Image.countDocuments(filter);
         const totalPages = Math.ceil(totalImages / limit);
@@ -49,7 +49,7 @@ export const resolvers = {
           : {};
         const filter = { isPublic: true, ...searchFilter, userId: user._id };
 
-        const images = await Image.find(filter).skip(skip).limit(limit);
+        const images = await Image.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit);
 
         const totalImages = await Image.countDocuments(filter);
         const totalPages = Math.ceil(totalImages / limit);
@@ -98,12 +98,12 @@ export const resolvers = {
       await user.save();
       return user;
     },
-    createImage: async (_, { prompt, isPublic }, context) => {
+    generateImage: async (_, { prompt, isPublic }, context) => {
       const { user } = context;
       if (!user) {
         throw new Error("You must be logged in to create an image.");
       }
-      var path: string;
+      /*
       try {
         const respuesta = await axios.post("http://localhost:42069/entry", {
           prompt,
@@ -114,14 +114,13 @@ export const resolvers = {
         console.log("el error", error);
         throw new Error("Error generating image.");
       }
-
-      console.log("the path", path);
+      */
 
       const image = new Image({
         prompt,
         isPublic,
         userId: user._id,
-        path,
+        path: "some-path",
       });
       await image.save();
       return image;
