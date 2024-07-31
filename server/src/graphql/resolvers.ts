@@ -3,6 +3,7 @@ import User from "../models/users.js";
 import axios from "axios";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { executeCommand } from "../command.js";
 
 export const resolvers = {
   Query: {
@@ -14,7 +15,10 @@ export const resolvers = {
           : {};
         const filter = { isPublic: true, ...searchFilter };
 
-        const images = await Image.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit);
+        const images = await Image.find(filter)
+          .sort({ createdAt: -1 })
+          .skip(skip)
+          .limit(limit);
 
         const totalImages = await Image.countDocuments(filter);
         const totalPages = Math.ceil(totalImages / limit);
@@ -32,10 +36,14 @@ export const resolvers = {
         throw new Error("Failed to fetch public images");
       }
     },
-		image: async (_, { _id }) => {
-			return await Image.findById(_id);
-		},
-    userImages: async (_, { page = 1, limit = 10, searchParam = "" }, context) => {
+    image: async (_, { _id }) => {
+      return await Image.findById(_id);
+    },
+    userImages: async (
+      _,
+      { page = 1, limit = 10, searchParam = "" },
+      context
+    ) => {
       const { user } = context;
       if (!user) {
         throw new Error("You must be logged in to create an image.");
@@ -47,7 +55,10 @@ export const resolvers = {
           : {};
         const filter = { ...searchFilter, userId: user._id };
 
-        const images = await Image.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit);
+        const images = await Image.find(filter)
+          .sort({ createdAt: -1 })
+          .skip(skip)
+          .limit(limit);
 
         const totalImages = await Image.countDocuments(filter);
         const totalPages = Math.ceil(totalImages / limit);
@@ -76,7 +87,7 @@ export const resolvers = {
       if (!isMatch) {
         throw new Error("Incorrect password.");
       }
-      const token = jwt.sign({ _id: user._id }, "some-key-key-key");
+      const token = jwt.sign({ _id: user._id }, process.env.SECRET_KEY);
       return { token, _id: user._id };
     },
     register: async (_, { username, password }) => {
@@ -125,6 +136,24 @@ export const resolvers = {
       if (!image) {
         throw new Error("Image not found.");
       }
+      let newPath: string;
+      const systemPath = process.env.SYSTEM_PATH 
+      try {
+        if (image.path.includes("private")) {
+          newPath = image.path.replace("private", "public");
+          await executeCommand(
+            `mv ${systemPath}${image.path} ${systemPath}${newPath}`
+          );
+        } else if (image.path.includes("public")) {
+          newPath = image.path.replace("public", "private");
+          await executeCommand(
+            `mv ${systemPath}${image.path} ${systemPath}${newPath}`
+          );
+        }
+      } catch (error) {
+        return new Error("Failed to update the image.");
+      }
+      image.path = newPath;
       image.isPublic = isPublic;
       await image.save();
       return image;

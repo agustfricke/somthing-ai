@@ -9,7 +9,8 @@ import { expressMiddleware } from '@apollo/server/express4';
 import cors from 'cors';
 import http from 'http';
 import path from "path";
-// configurar los archivos estaticos, uni privado y otro publico
+import dotenv from 'dotenv';
+dotenv.config();
 try {
     mongoose.set("strictQuery", true);
     const conn = await mongoose.connect("mongodb://localhost:27017/aidb");
@@ -41,7 +42,7 @@ app.use('/graphql', cors(), express.json(), expressMiddleware(server, {
         }
         const token = authHeader.split(" ")[1];
         try {
-            const decodedToken = jwt.verify(token, "some-key-key-key");
+            const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
             return { user: decodedToken };
         }
         catch (error) {

@@ -16,7 +16,7 @@ export async function authMiddleware(req, res, next) {
   }
 
   try {
-    const decodedToken = jwt.verify(token, "some-key-key-key");
+    const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
     const tokenUserID = decodedToken._id;
 
     const fileName = path.basename(req.url);
@@ -27,12 +27,10 @@ export async function authMiddleware(req, res, next) {
       return res.status(404).json({ message: "Imagen no encontrada" });
     }
 
-    // Verificar si el usuario del token tiene permiso para acceder a la imagen
     if (image.userId.toString() !== tokenUserID && !image.isPublic) {
       return res.status(403).json({ message: "No tienes permiso para acceder a esta imagen" });
     }
 
-    // Añadir la información de la imagen a req para uso posterior si es necesario
     req.image = image;
     req.user = decodedToken;
 
@@ -44,7 +42,6 @@ export async function authMiddleware(req, res, next) {
     if (error instanceof jwt.TokenExpiredError) {
       return res.status(401).json({ message: "Token expirado" });
     }
-    console.error(error);
     return res.status(500).json({ message: "Error en la autenticación" });
   }
 }

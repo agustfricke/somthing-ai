@@ -1,4 +1,3 @@
-import { startStandaloneServer } from "@apollo/server/standalone";
 import mongoose from "mongoose";
 import { typeDefs } from "./graphql/typeDefs.js";
 import { resolvers } from "./graphql/resolvers.js";
@@ -10,8 +9,9 @@ import { expressMiddleware } from '@apollo/server/express4';
 import cors from 'cors';
 import http from 'http';
 import path from "path";
+import dotenv from 'dotenv';
 
-// configurar los archivos estaticos, uni privado y otro publico
+dotenv.config();
 
 try {
   mongoose.set("strictQuery", true);
@@ -49,7 +49,7 @@ app.use('/graphql', cors<cors.CorsRequest>(), express.json(), expressMiddleware(
   }
   const token = authHeader.split(" ")[1];
     try {
-      const decodedToken = jwt.verify(token, "some-key-key-key");
+      const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
       return { user: decodedToken };
     } catch (error) {
       return { user: null };
