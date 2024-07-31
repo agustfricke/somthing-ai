@@ -29,7 +29,6 @@ export const resolvers = {
           },
         };
       } catch (error) {
-        console.log("errorwiwiwiwi", error)
         throw new Error("Failed to fetch public images");
       }
     },
@@ -37,7 +36,6 @@ export const resolvers = {
 			return await Image.findById(_id);
 		},
     userImages: async (_, { page = 1, limit = 10, searchParam = "" }, context) => {
-      console.log(context)
       const { user } = context;
       if (!user) {
         throw new Error("You must be logged in to create an image.");
@@ -64,7 +62,6 @@ export const resolvers = {
           },
         };
       } catch (error) {
-        console.log("errorwiwiwiwi", error)
         throw new Error("Failed to fetch public images");
       }
     },
@@ -103,7 +100,7 @@ export const resolvers = {
       if (!user) {
         throw new Error("You must be logged in to create an image.");
       }
-      /*
+      let path: string;
       try {
         const respuesta = await axios.post("http://localhost:42069/entry", {
           prompt,
@@ -111,16 +108,14 @@ export const resolvers = {
         });
         path = respuesta.data;
       } catch (error) {
-        console.log("el error", error);
         throw new Error("Error generating image.");
       }
-      */
 
       const image = new Image({
         prompt,
         isPublic,
         userId: user._id,
-        path: "/private/2024-07-31_11-56-52_2342.png",
+        path,
       });
       await image.save();
       return image;

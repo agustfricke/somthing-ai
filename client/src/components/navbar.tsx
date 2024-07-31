@@ -7,10 +7,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Link, useLocation } from "react-router-dom";
+import { useAuthStore } from "@/store/auth";
 
 export default function Navbar() {
   const location = useLocation();
 
+  const { isAuth, logout } = useAuthStore();
 
   const getLinkClass = (path: string) => {
     return location.pathname === path
@@ -41,14 +43,17 @@ export default function Navbar() {
               Generate image
             </Link>
 
+            {isAuth && (
               <button
                 onClick={() => {
+                  logout();
                 }}
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
                 <LogOutIcon className="w-4 h-4" />
                 Logout
               </button>
+            )}
           </nav>
         </SheetContent>
       </Sheet>

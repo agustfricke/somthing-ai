@@ -22,9 +22,9 @@ catch (error) {
 const app = express();
 const httpServer = http.createServer(app);
 app.use(cors({
-    origin: '*', // Permite solicitudes desde cualquier origen
-    methods: ['GET', 'POST'], // Permite métodos específicos
-    allowedHeaders: ['Content-Type', 'Authorization'] // Permite headers específicos
+    origin: '*',
+    methods: ['GET'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use('/public', express.static(path.join('static/public')));
 app.use('/private', authMiddleware, express.static(path.join('static/private')));
@@ -42,12 +42,9 @@ app.use('/graphql', cors(), express.json(), expressMiddleware(server, {
         const token = authHeader.split(" ")[1];
         try {
             const decodedToken = jwt.verify(token, "some-key-key-key");
-            console.log("todo ok");
             return { user: decodedToken };
         }
         catch (error) {
-            console.error('Token verification failed:', error.message);
-            console.log("no ok");
             return { user: null };
         }
     },

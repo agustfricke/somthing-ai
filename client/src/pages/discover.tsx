@@ -85,12 +85,18 @@ export default function Discover() {
               to={`/image/${image._id}`}
               className="hover:cursor-pointer rounded-lg hover:bg-zinc-500/50 transition-colors duration-300 p-1"
             >
-            <ImageComponent path={`${import.meta.env.VITE_BACKEND_URL}${image.path}`} /> 
-              <p className="mt-2 text-sm text-zinc-300">{image.prompt}</p>
+            <ImageComponent 
+            height={313}
+            path={`${import.meta.env.VITE_BACKEND_URL}${image.path}`} /> 
             </Link>
           ))}
         </div>
-        {loading && !data && <LoaderComponent />}
+
+          {loading && !data && 
+            <div className="flex justify-center items-center mt-[100px]">
+            <LoaderComponent />
+            </div>
+          }
         {!loading && !fullyLoaded && (
           <InView
             as="div"
@@ -102,6 +108,7 @@ export default function Discover() {
           ></InView>
         )}
       </ScrollArea>
+
     </main>
   );
 }

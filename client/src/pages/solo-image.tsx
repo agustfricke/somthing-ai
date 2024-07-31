@@ -50,6 +50,7 @@ export default function SoloImage() {
     <div className="grid grid-cols-1 md:grid-cols-7 relative">
       <div className="col-span-4 rounded-lg transition-colors duration-300 p-1">
         <ImageComponent
+            height={820}
           path={`${import.meta.env.VITE_BACKEND_URL}${data.image.path}`}
         />
       </div>
@@ -64,18 +65,22 @@ export default function SoloImage() {
 
         {data.image.user._id === userId && (
           <div className="items-top flex space-x-2">
-            <Checkbox
-              checked={data.image.isPublic}
-              onCheckedChange={() => {
-                updateImage({
-                  variables: {
-                    id: data.image._id,
-                    isPublic: !data.image.isPublic,
-                  },
-                });
-              }}
-              id="isPublic"
-            />
+          {updateLoading ? (
+            <LoaderComponent />
+          ) : (
+          <Checkbox
+          checked={data.image.isPublic}
+          onCheckedChange={() => {
+            updateImage({
+              variables: {
+                id: data.image._id,
+                isPublic: !data.image.isPublic,
+              },
+            });
+          }}
+          id="isPublic"
+          />
+          )}
             <div className="grid gap-1.5 leading-none mb-4">
               <label
                 htmlFor="isPublic"

@@ -54,7 +54,7 @@ export default function UserImages({ isLoading }: { isLoading: boolean }) {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
           {isLoading && (
             <div className="rounded-lg hover:bg-zinc-500/50 bg-muted/40 transition-colors duration-300 p-1">
-              <div className="flex justify-center items-center h-full">
+              <div className="flex justify-center items-center h-[313px]">
                 <LoaderComponent />
               </div>
             </div>
@@ -66,11 +66,13 @@ export default function UserImages({ isLoading }: { isLoading: boolean }) {
               className="hover:cursor-pointer rounded-lg hover:bg-zinc-700/80 
               transition-colors duration-300 p-1"
             >
-            <ImageComponent path={`${import.meta.env.VITE_BACKEND_URL}${image.path}`} /> 
+              <ImageComponent
+                height={313}
+                path={`${import.meta.env.VITE_BACKEND_URL}${image.path}`}
+              />
             </Link>
           ))}
 
-          {loading && !data && <LoaderComponent />}
           {!loading && !fullyLoaded && (
             <InView
               as="div"
@@ -84,6 +86,12 @@ export default function UserImages({ isLoading }: { isLoading: boolean }) {
           )}
         </div>
       </ScrollArea>
+
+          {loading && !data && 
+            <div className="flex justify-center items-center mt-[100px]">
+            <LoaderComponent />
+            </div>
+          }
     </div>
   );
 }

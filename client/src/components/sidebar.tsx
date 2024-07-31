@@ -1,8 +1,11 @@
+import { useAuthStore } from "@/store/auth";
 import { Home as H, LogOutIcon, Package, Pickaxe } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 export default function Sidebar() {
   const location = useLocation();
+
+  const { isAuth, logout } = useAuthStore();
 
   const getLinkClass = (path: string) => {
     return location.pathname === path
@@ -32,15 +35,17 @@ export default function Sidebar() {
               Generate image
             </Link>
 
+            {isAuth && (
               <button
-              onClick={() => {
-              }}
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                onClick={() => {
+                  logout();
+                }}
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
-              <LogOutIcon className="w-4 h-4"/>
-              Logout
+                <LogOutIcon className="w-4 h-4" />
+                Logout
               </button>
-
+            )}
           </nav>
         </div>
       </div>
